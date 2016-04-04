@@ -1,12 +1,12 @@
 package com.pog.eg.web;
 
 import com.pog.eg.service.SampleService;
+import org.joda.time.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -44,5 +44,39 @@ public class SampleController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public List getList() {
         return simpleService.buildSampleList();
+    }
+
+    /**
+     * This method show that we integrate Joda-Time correctly.
+     * this should equal local datetime of web server.
+     *
+     * @return LocalDateTime Local time of servlet.
+     */
+    @RequestMapping(value = "/localDateTime", method = RequestMethod.GET)
+    public LocalDateTime getLocalDateTime() {
+        return new LocalDateTime();
+    }
+
+    /**
+     * This method show that we integrate Joda-Time correctly.
+     * this should equal datetime(UTC) of web server.
+     *
+     * @return LocalDateTime UTC time of servlet.
+     */
+    @RequestMapping(value = "/utcDateTime", method = RequestMethod.GET)
+    public DateTime getDateTime() {
+        return new DateTime();
+    }
+
+    /**
+     * The default time zone is derived from the system property user.timezone.
+     * If that is null or is not a valid identifier,
+     * then the value of the JDK TimeZone default is converted.
+     * If that fails, UTC is used.
+     * @return DateTimeZone Timezone
+     */
+    @RequestMapping(value = "/timezone", method = RequestMethod.GET)
+    public DateTimeZone getTimezone() {
+        return DateTimeZone.getDefault();
     }
 }
