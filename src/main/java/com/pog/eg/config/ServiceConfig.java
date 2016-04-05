@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @version %I%, %G%
  */
 @Configuration
-@ComponentScan({ "com.pog.eg.service"})
+@ComponentScan({"com.pog.eg.service"})
 //@EnableTransactionManagement // if use @Transactional
 public class ServiceConfig {
 }

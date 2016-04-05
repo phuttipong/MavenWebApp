@@ -5,7 +5,7 @@
 
     <!--Using xml config for this part is more easier than extend AbstractAnnotationConfigDispatcherServletInitializer class-->
 
-    <display-name>Archetype Created Web Application with Spring 4</display-name>
+    <display-name>Archetype Created Web Application with Spring 4 (RESTful)</display-name>
 
     <servlet>
         <servlet-name>sample-web</servlet-name>
