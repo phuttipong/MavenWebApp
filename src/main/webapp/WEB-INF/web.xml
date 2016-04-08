@@ -1,11 +1,11 @@
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                              http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
 
     <!--Using xml config for this part is more easier than extend AbstractAnnotationConfigDispatcherServletInitializer class-->
 
-    <display-name>Archetype Created Web Application with Spring 4 (RESTful)</display-name>
+    <display-name>Archetype Created Web Application with Spring 4 (restful)</display-name>
 
     <servlet>
         <servlet-name>sample-web</servlet-name>

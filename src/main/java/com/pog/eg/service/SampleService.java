@@ -16,7 +16,7 @@ public class SampleService {
 
     public List<String> buildSampleList(){
 
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
 
         list.add("item 1");
         list.add("item 2");

@@ -15,15 +15,13 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.LocaleContextResolver;
-import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.CookieLocaleResolver;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Configuration class of Web layer.
@@ -80,8 +78,6 @@ public class WebServletConfig extends WebMvcConfigurerAdapter {
         super.configureMessageConverters(converters);
     }
 
-
-
     /**
      * Our messageSource will use message*.properties files locate in resources folder to resolve localized message
      * for us. It is used in our controllers class. With this we can sent localized error messages to user
@@ -101,4 +97,36 @@ public class WebServletConfig extends WebMvcConfigurerAdapter {
         messageSource.setFallbackToSystemLocale(false);
         return messageSource;
     }
+
+    //<editor-fold desc="ThymeleafViewResolver">
+    //depend on a MessageSource
+    //
+    @Bean
+    public ServletContextTemplateResolver templateResolver() {
+        ServletContextTemplateResolver resolver = new ServletContextTemplateResolver();
+        resolver.setPrefix("/WEB-INF/pages/");
+        resolver.setTemplateMode("HTML5");
+        resolver.setOrder(1);
+        resolver.setCharacterEncoding("UTF-8"); // need for localization
+        return resolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine engine = new SpringTemplateEngine();
+        engine.setTemplateResolver(templateResolver());
+        engine.setTemplateEngineMessageSource(clientString());  // need for localization
+        return engine;
+    }
+
+    @Bean
+    public ThymeleafViewResolver thymeleafViewResolver() {
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        resolver.setTemplateEngine(templateEngine());
+        String[] viewNames = new String[]{"*.html"};
+        resolver.setViewNames(viewNames);
+        resolver.setCharacterEncoding("UTF-8"); // need for localization
+        return resolver;
+    }
+    //</editor-fold>
 }

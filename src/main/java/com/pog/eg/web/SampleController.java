@@ -1,7 +1,10 @@
 package com.pog.eg.web;
 
+import com.pog.eg.config.security.MultiRolesManager;
 import com.pog.eg.service.SampleService;
-import org.joda.time.*;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.LocaleContextResolver;
-import org.springframework.web.servlet.support.RequestContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -26,7 +24,7 @@ import java.util.TimeZone;
  * @author phuttipong
  * @version %I%, %G%
  */
-@SuppressWarnings("SpringMVCViewInspection")
+@SuppressWarnings({"SpringMVCViewInspection", "SameReturnValue"})
 @RestController
 public class SampleController {
 
@@ -38,12 +36,15 @@ public class SampleController {
     @Autowired
     private MessageSource clientString;
 
+    @Autowired
+    private MultiRolesManager multiRolesManager;
+
     /**
      * Simple as it is.
      *
      * @return String Some Hello World text.
      */
-    @RequestMapping(value = "/text", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/text", method = RequestMethod.GET)
     public String getText() {
         logger.info("logger work fine.");
         return "Simple Hello World!, return string in response body";
@@ -54,7 +55,7 @@ public class SampleController {
      *
      * @return List Sample list of String.
      */
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/list", method = RequestMethod.GET)
     public List getList() {
         return simpleService.buildSampleList();
     }
@@ -65,7 +66,7 @@ public class SampleController {
      *
      * @return LocalDateTime Local time of servlet.
      */
-    @RequestMapping(value = "/localDateTime", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/localDateTime", method = RequestMethod.GET)
     public LocalDateTime getLocalDateTime() {
         return new LocalDateTime();
     }
@@ -76,7 +77,7 @@ public class SampleController {
      *
      * @return LocalDateTime UTC time of servlet.
      */
-    @RequestMapping(value = "/utcDateTime", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/utcDateTime", method = RequestMethod.GET)
     public DateTime getDateTime() {
         return new DateTime();
     }
@@ -89,7 +90,7 @@ public class SampleController {
      *
      * @return DateTimeZone Timezone
      */
-    @RequestMapping(value = "/timezone", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/timezone", method = RequestMethod.GET)
     public DateTimeZone getTimezone() {
         return DateTimeZone.getDefault();
     }
@@ -102,7 +103,7 @@ public class SampleController {
      *
      * @return DateTimeZone Timezone
      */
-    @RequestMapping(value = "/myLocale", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/myLocale", method = RequestMethod.GET)
     public String getMyLocale(Locale locale, TimeZone timeZone) {
         return locale.getDisplayName() + " " + timeZone.getDisplayName();
     }
@@ -113,8 +114,19 @@ public class SampleController {
      * @param locale Session locale.
      * @return String localized greeting message.
      */
-    @RequestMapping(value = "/greetingMessage", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/greetingMessage", method = RequestMethod.GET)
     public String getHelloMessage(Locale locale) {
         return clientString.getMessage("app.greeting", null, locale);
     }
+
+    /**
+     * Secured url
+     *
+     * @return secret string
+     */
+    @RequestMapping(value = "/sc/secretData", method = RequestMethod.GET)
+    public String getSecretData() {
+        return "I'm alien.";
+    }
+
 }
