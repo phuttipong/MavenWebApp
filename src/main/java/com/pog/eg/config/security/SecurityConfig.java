@@ -14,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * Configuration class of Spring Security.
+ * Spring Security Configuration class.
  * <p>
  * Use BCryptPasswordEncoder, should be standard so password can not be stolen and use by someone else.
  *
@@ -26,7 +26,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String USER_ERROR_VIEW = "/pages/400";
+    private static final String PAGE_NOT_FOUND_URL = "/reservedForSpringSecurity";
+    private static final String LOGIN_URL = "/api/login";
     private static final String DB_DRIVER_NAME = "com.mysql.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/web_app";
     private static final String DB_USERNAME = "app";
@@ -48,28 +49,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     protected void configure(HttpSecurity http) throws Exception {
 
-        configRestAuth(http);
         configStatelessProtection(http);
 
         http
-                .anonymous().and()
                 .authorizeRequests()
 
                 //allow anonymous resource requests
                 .antMatchers("/").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/resources/**").permitAll()
-                .antMatchers("/pages/**").permitAll()
 
                 //allow only anonymous POSTs to login
-                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
-                .antMatchers("/api/login").denyAll()
+                .antMatchers(HttpMethod.POST, LOGIN_URL).permitAll()
 
                 //defined Admin only API area
-                .antMatchers("/sc/**").hasRole("ADMIN")
-
-                //all other request need to be authenticated
-                .anyRequest().authenticated();
+                .antMatchers("/sc/**").hasRole("ADMIN");
     }
 
     /**
@@ -103,39 +97,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Config HttpSecurity with options that make it login and logout by RESTful request.     *
-     * When receive unauthorized request or unrecognized request, then return 404.html for non-AJAX, 404 response for AJAX.
-     * !important Maybe be attacked by CSRF.
-     *
-     * @param http configurable object.
-     * @throws Exception
-     */
-    private void configRestAuth(HttpSecurity http) throws Exception {
-        http
-                // Set custom handler and entry-point so spring can handle RESTful requests
-                .exceptionHandling()
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint(USER_ERROR_VIEW))
-                .accessDeniedHandler(new RestAccessDeniedHandler(USER_ERROR_VIEW))
-                .and()
-                .formLogin().disable()
-                .httpBasic().disable()
-                // Spring 4 enable csrf by default.
-                // disable and we use our CSRF protection.
-                .csrf().disable();
-    }
-
-    /**
-     * Use stateless way to protect our RESTful service
+     * Use stateless way to protect our RESTful services.
      * see http://blog.jdriven.com/2014/10/stateless-spring-security-part-1-stateless-csrf-protection/
      *
      * @param http configurable object.
      * @throws Exception
      */
     private void configStatelessProtection(HttpSecurity http) throws Exception {
-        http     // custom JSON based authentication by POST of {"username":"<name>","password":"<password>"} which sets the token header upon authentication
-                .addFilterBefore(new StatelessLoginFilter("/api/login", statelessAuthenticationService, userDetailsService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+        http
+                // Spring 4 enable csrf by default.
+                // disable and we use our CSRF protection.
+                .formLogin().disable()
+                .httpBasic().disable()
+                .csrf().disable()
+
+                // custom JSON based authentication by POST of {"username":"<name>","password":"<password>"} which sets the token header upon authentication
+                .addFilterBefore(new StatelessLoginFilter(HttpMethod.POST, LOGIN_URL, statelessAuthenticationService, userDetailsService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 
                 // custom AuthenticationToken based authentication based on the header previously given to the client
-                .addFilterBefore(new StatelessAuthenticationFilter(statelessAuthenticationService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new StatelessAuthenticationFilter(statelessAuthenticationService), UsernamePasswordAuthenticationFilter.class)
+
+                //When receive unauthorized request or unrecognized request, then return 404.html for non-AJAX, 404 response for AJAX.
+                .exceptionHandling()
+                .authenticationEntryPoint(new RestAuthenticationEntryPoint(PAGE_NOT_FOUND_URL))
+                .accessDeniedHandler(new RestAccessDeniedHandler(PAGE_NOT_FOUND_URL));
     }
 }

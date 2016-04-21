@@ -1,6 +1,5 @@
 package com.pog.eg.web;
 
-import com.pog.eg.config.security.MultiRolesManager;
 import com.pog.eg.service.SampleService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -35,9 +34,6 @@ public class SampleController {
 
     @Autowired
     private MessageSource clientString;
-
-    @Autowired
-    private MultiRolesManager multiRolesManager;
 
     /**
      * Simple as it is.
@@ -127,6 +123,15 @@ public class SampleController {
     @RequestMapping(value = "/sc/secretData", method = RequestMethod.GET)
     public String getSecretData() {
         return "I'm alien.";
+    }
+
+
+    /**
+     * This method always return exception. for demonstrate how GlobalControllerExceptionHandler work.
+     */
+    @RequestMapping(value = "/api/error", method = RequestMethod.GET)
+    public void throwError() {
+        throw new IllegalStateException("some error");
     }
 
 }

@@ -25,18 +25,14 @@ class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(RestAuthenticationEntryPoint.class);
 
-    private final String errorPage;
+    private final String notMappedUrl;
 
     /**
-     * @param errorPageUrl (Optional) url to redirect ot when HTTP Error.
+     * @param notMappedUrl (Optional) url which not map to any controller. used to create NotFoundException in web context.
      */
     @SuppressWarnings("SameParameterValue")
-    RestAuthenticationEntryPoint(String errorPageUrl) {
-        this.errorPage = errorPageUrl;
-    }
-
-    public String getErrorPage() {
-        return errorPage;
+    RestAuthenticationEntryPoint(String notMappedUrl) {
+        this.notMappedUrl = notMappedUrl;
     }
 
     @Override
@@ -61,8 +57,8 @@ class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
             return;
         }
 
-        if (errorPage != null)
-            response.sendRedirect(request.getContextPath() + errorPage);
+        if (notMappedUrl != null)
+            response.sendRedirect(notMappedUrl);
         else
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }

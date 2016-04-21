@@ -1,5 +1,6 @@
 package com.pog.eg.config.security;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,9 +28,9 @@ class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter {
     private final MultiRolesUserDetailsService userDetailsService;
 
     @SuppressWarnings("SameParameterValue")
-    StatelessLoginFilter(String urlMapping, StatelessAuthenticationService statelessAuthenticationService,
+    StatelessLoginFilter(HttpMethod urlMethod, String urlMapping, StatelessAuthenticationService statelessAuthenticationService,
                          MultiRolesUserDetailsService userDetailsService, AuthenticationManager authManager) {
-        super(new AntPathRequestMatcher(urlMapping, "POST"));
+        super(new AntPathRequestMatcher(urlMapping, urlMethod.toString()));
         this.userDetailsService = userDetailsService;
         this.statelessAuthenticationService = statelessAuthenticationService;
         setAuthenticationManager(authManager);

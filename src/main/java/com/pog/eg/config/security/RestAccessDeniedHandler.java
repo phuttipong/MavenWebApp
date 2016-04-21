@@ -25,18 +25,14 @@ class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(RestAccessDeniedHandler.class);
 
-    private final String errorPage;
+    private final String notMappedUrl;
 
     /**
-     * @param errorPageUrl (Optional) url to redirect ot when HTTP Error.
+     * @param notMappedUrl (Optional) url which not map to any controller. used to create NotFoundException in web context.
      */
     @SuppressWarnings("SameParameterValue")
-    RestAccessDeniedHandler(String errorPageUrl) {
-        this.errorPage = errorPageUrl;
-    }
-
-    public String getErrorPage() {
-        return errorPage;
+    RestAccessDeniedHandler(String notMappedUrl) {
+        this.notMappedUrl = notMappedUrl;
     }
 
     public void handle(HttpServletRequest request, HttpServletResponse response,
@@ -62,8 +58,8 @@ class RestAccessDeniedHandler implements AccessDeniedHandler {
             return;
         }
 
-        if (errorPage != null)
-            response.sendRedirect(request.getContextPath() + errorPage);
+        if (notMappedUrl != null)
+            response.sendRedirect(notMappedUrl);
         else
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
