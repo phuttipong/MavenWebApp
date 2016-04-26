@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MavenWebApp.iml" filepath="$PROJECT_DIR$/MavenWebApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebixUi/Webix.iml" filepath="$PROJECT_DIR$/WebixUi/Webix.iml" />
     </modules>
   </component>
 </project>
