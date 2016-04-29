@@ -1,7 +1,7 @@
 /*
  * Created by phuttipong on 28/4/2559.
  */
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 
 class CheckList extends Component {
     render() {
@@ -26,4 +26,8 @@ class CheckList extends Component {
         );
     }
 }
+
+CheckList.propTypes = {
+    tasks: PropTypes.arrayOf(PropTypes.object)
+};
 export default CheckList;

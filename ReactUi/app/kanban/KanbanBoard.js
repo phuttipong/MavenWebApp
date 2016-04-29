@@ -1,7 +1,7 @@
 /*
  * Created by phuttipong on 28/4/2559.
  */
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import List from './List';
 
 class KanbanBoard extends Component {
@@ -21,5 +21,10 @@ this.props.cards.filter((card) => card.status === "done")
         );
     }
 }
+
+//  Help in debug process by throw WARNING message to browser console.
+KanbanBoard.propTypes = {
+    cards: PropTypes.arrayOf(PropTypes.object)
+};
 
 export default KanbanBoard;
