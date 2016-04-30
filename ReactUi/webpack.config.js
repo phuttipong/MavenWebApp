@@ -7,7 +7,7 @@ var config = {
     devtool: 'eval-source-map',
     entry: {
         kanban: __dirname + "/app/kanban/App.js",
-        contactList: __dirname + "/app/contactList/ContactsApp.js"
+        contactList: __dirname + "/app/contactList/ContactsAppContainer.js"
     },
     output: {
         path: __dirname + "/public",
@@ -28,7 +28,7 @@ var config = {
         colors: true,
         historyApiFallback: true,
         inline: true
-    },
+    }
 };
 
 /*
