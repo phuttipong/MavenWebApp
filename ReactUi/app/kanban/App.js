@@ -1,6 +1,11 @@
 import React from 'react'; //save typing React.Component
 import {render} from 'react-dom'; //save typing ReactDom.render
+import {Router, Route} from 'react-router';
+
 import KanbanBoardContainer from './KanbanBoardContainer';
+import KanbanBoard from './KanbanBoard';
+import EditCard from './EditCard';
+import NewCard from './NewCard';
 
 let cardsList = [
     {
@@ -37,4 +42,14 @@ let cardsList = [
     }
 ];
 
+render((
+    <Router>
+        <Route component={KanbanBoardContainer}>
+            <Route path="/" component={KanbanBoard}>
+                <Route path="new" component={NewCard}/>
+                <Route path="edit/:card_id" component={EditCard}/>
+            </Route>
+        </Route>
+    </Router>
+), document.getElementById('root'));
 render(<KanbanBoardContainer/>, document.getElementById('root'));
