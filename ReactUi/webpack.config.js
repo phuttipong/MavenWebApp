@@ -7,7 +7,8 @@ var config = {
     devtool: 'eval-source-map',
     entry: {
         kanban: __dirname + "/app/kanban/App.js",
-        contactList: __dirname + "/app/contactList/ContactsAppContainer.js"
+        contactList: __dirname + "/app/contactList/ContactsAppContainer.js",
+        routing: __dirname + "/app/routing/App.js"
     },
     output: {
         path: __dirname + "/public",
