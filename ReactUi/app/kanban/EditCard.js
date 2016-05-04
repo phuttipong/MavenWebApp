@@ -3,10 +3,12 @@
  */
 import React, {Component, PropTypes} from 'react';
 import CardForm from './CardForm';
+
 class EditCard extends Component {
+
     componentWillMount() {
         let card = this.props.cards.find((card)=>card.id == this.props.params.card_id);
-        this.setState({card});
+        this.setState(card);
     }
 
     handleChange(field, value) {

@@ -4,6 +4,7 @@
 import React, {Component, PropTypes} from 'react';
 import CheckList from './CheckList';
 import marked from 'marked';
+import {Link} from 'react-router';
 
 class Card extends Component {
     constructor() {
@@ -43,6 +44,7 @@ class Card extends Component {
         return (
             <div className="card">
                 <div style={sideColor}></div>
+                <div className="card__edit"><Link to={'/edit/'+this.props.id}>&#9998;</Link></div>
                 <div className={this.state.showDetails? "card__title card__title--is-open" : "card__title"}
                      onClick={this.toggleDetails.bind(this)}>
                     {" "}

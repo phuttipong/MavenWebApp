@@ -67,3 +67,5 @@ CardForm.propTypes = {
     handleSubmit: PropTypes.func.isRequired,
     handleClose: PropTypes.func.isRequired
 };
+
+export default CardForm;

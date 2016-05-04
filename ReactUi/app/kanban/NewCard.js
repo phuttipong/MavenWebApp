@@ -43,6 +43,6 @@ class NewCard extends Component {
     }
 }
 NewCard.propTypes = {
-    cardCallbacks: PropTypes.object,
+    cardCallbacks: PropTypes.object
 };
 export default NewCard;

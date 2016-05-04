@@ -52,4 +52,3 @@ render((
         </Route>
     </Router>
 ), document.getElementById('root'));
-render(<KanbanBoardContainer/>, document.getElementById('root'));
