@@ -1,0 +1,15 @@
+{
+  "name": "simple-flux",
+  "version": "0.0.1",
+  "description": "Simple Flux Example",
+  "author": "Phuttipong",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server --progress",
+    "build": "NODE_ENV=production node_modules/.bin/webpack -p --progress --colors"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "flux": "^2.1.1"
+  }
+}
