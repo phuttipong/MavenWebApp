@@ -39,3 +39,4 @@ This project focuses solely on Flux so it contains very simple React UI.
 
 * React & React-DOM
 * Flux
+* fbemitter *to emits an event so that the views can get notified that the store has changed.*
