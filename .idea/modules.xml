@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Flux/Flux.iml" filepath="$PROJECT_DIR$/Flux/Flux.iml" />
       <module fileurl="file://$PROJECT_DIR$/HelloWebpack/HelloWebpack.iml" filepath="$PROJECT_DIR$/HelloWebpack/HelloWebpack.iml" />
       <module fileurl="file://$PROJECT_DIR$/MavenWebApp.iml" filepath="$PROJECT_DIR$/MavenWebApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/ReactUi/ReactUi.iml" filepath="$PROJECT_DIR$/ReactUi/ReactUi.iml" />
       <module fileurl="file://$PROJECT_DIR$/SimpleFlux/SimpleFlux.iml" filepath="$PROJECT_DIR$/SimpleFlux/SimpleFlux.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Test/Test.iml" filepath="$PROJECT_DIR$/Test/Test.iml" />
     </modules>
   </component>
 </project>
