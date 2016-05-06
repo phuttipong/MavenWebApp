@@ -26,11 +26,11 @@ BankBalanceStore.dispatchToken = AppDispatcher.register((action) => {
             __emitter.emit(CHANGE_EVENT);
             break;
         case bankConstants.DEPOSITED_INTO_ACCOUNT:
-            balance = balance + action.ammount;
+            balance = balance + action.amount;
             __emitter.emit(CHANGE_EVENT);
             break;
         case bankConstants.WITHDREW_FROM_ACCOUNT:
-            balance = balance - action.ammount;
+            balance = balance - action.amount;
             __emitter.emit(CHANGE_EVENT);
             break;
     }
