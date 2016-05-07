@@ -11,6 +11,22 @@ let CardActionCreator = {
             success: constants.FETCH_CARDS_SUCCESS,
             failure: constants.FETCH_CARDS_ERROR
         });
+    },
+
+    createCard(card) {
+        AppDispatcher.dispatchAsync(CardAPI.createCard(card), {
+            request: constants.CREATE_CARD,
+            success: constants.CREATE_CARD_SUCCESS,
+            failure: constants.CREATE_CARD_ERROR
+        }, {card});
+    },
+
+    updateCard(card, draftCard) {
+        AppDispatcher.dispatchAsync(CardAPI.updateCard(card, draftCard), {
+            request: constants.UPDATE_CARD,
+            success: constants.UPDATE_CARD_SUCCESS,
+            failure: constants.UPDATE_CARD_ERROR
+        }, {card, draftCard});
     }
 };
 export default CardActionCreator;

@@ -17,4 +17,12 @@ export default {
     TOGGLE_TASK: "toggle task",
     TOGGLE_TASK_ERROR: "toggle task error",
     TOGGLE_TASK_SUCCESS: "toggle task success",
+
+    CREATE_CARD: "create card",
+    CREATE_CARD_ERROR: "create card error",
+    CREATE_CARD_SUCCESS: "create card success",
+
+    UPDATE_CARD: "update card",
+    UPDATE_CARD_ERROR: "update card error",
+    UPDATE_CARD_SUCCESS: "update card success",
 }

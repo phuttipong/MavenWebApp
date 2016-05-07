@@ -26,6 +26,7 @@ class CardStore extends ReduceStore {
         switch (action.type) {
             case constants.FETCH_CARDS_SUCCESS:
                 return action.payload.response;
+
             case constants.CREATE_TASK:
                 cardIndex = this.getCardIndex(action.payload.cardId);
                 return update(this.getState(), {
@@ -33,6 +34,7 @@ class CardStore extends ReduceStore {
                         tasks: {$push: [action.payload.task]}
                     }
                 });
+
             case constants.CREATE_TASK_SUCCESS:
                 cardIndex = this.getCardIndex(action.payload.cardId);
                 taskIndex = this.getState()[cardIndex].tasks.findIndex((task)=>(
@@ -97,6 +99,40 @@ class CardStore extends ReduceStore {
                         }
                     }
                 });
+
+            case constants.UPDATE_CARD:
+                cardIndex = this.getCardIndex(action.payload.card.id);
+                return update(this.getState(), {
+                    [cardIndex]: {
+                        $set: action.payload.draftCard
+                    }
+                });
+
+            case constants.UPDATE_CARD_ERROR:
+                cardIndex = this.getCardIndex(action.payload.card.id);
+                return update(this.getState(), {
+                    [cardIndex]: {
+                        $set: action.payload.card
+                    }
+                });
+
+            case constants.CREATE_CARD:
+                return update(this.getState(), {$push: [action.payload.card]});
+
+            case constants.CREATE_CARD_SUCCESS:
+                cardIndex = this.getCardIndex(action.payload.card.id);
+                return update(this.getState(), {
+                    [cardIndex]: {
+                        id: {$set: action.payload.response.id}
+                    }
+                });
+
+            case constants.CREATE_CARD_ERROR:
+                cardIndex = this.getCardIndex(action.payload.card.id);
+                return update(this.getState(), {
+                    $splice: [[taskIndex, 1]]//remove 1 item from array start at taskIndex
+                });
+
             default:
                 return state;
         }
