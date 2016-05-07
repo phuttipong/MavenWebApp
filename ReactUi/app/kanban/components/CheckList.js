@@ -2,11 +2,13 @@
  * Created by phuttipong on 28/4/2559.
  */
 import React, {Component, PropTypes} from 'react';
+import TaskActionCreator from '../actions/TaskActionCreator'
 
 class CheckList extends Component {
     checkInputKeyPress(evt) {
         if (evt.key === 'Enter') {
-            this.props.taskCallbacks.add(this.props.cardId, evt.target.value);
+            let newTask = {id: Date.now(), name: evt.target.value, done: false};
+            TaskActionCreator.addTask(this.props.cardId, newTask);
             evt.target.value = '';
         }
     }
@@ -17,12 +19,12 @@ class CheckList extends Component {
                 {/*read-only controlled input UI won't changed by user*/}
                 <input type="checkbox"
                        checked={task.done}
-                       onChange={this.props.taskCallbacks.toggle.bind(null, this.props.cardId, task.id, taskIndex)}/>
+                       onChange={TaskActionCreator.toggleTask.bind(null, this.props.cardId, task, taskIndex)}/>
                 {" "}
                 {task.name}
                 {" "}
                 <a href="#" className="checklist__task--remove"
-                   onClick={this.props.taskCallbacks.delete.bind(null, this.props.cardId, task.id, taskIndex)}/>
+                   onClick={TaskActionCreator.deleteTask.bind(null, this.props.cardId, task, taskIndex)}/>
             </li>
         ));
 
@@ -40,7 +42,6 @@ class CheckList extends Component {
 
 CheckList.propTypes = {
     cardId: PropTypes.number,
-    tasks: PropTypes.arrayOf(PropTypes.object),
-    taskCallbacks: PropTypes.object
+    tasks: PropTypes.arrayOf(PropTypes.object)
 };
 export default CheckList;
