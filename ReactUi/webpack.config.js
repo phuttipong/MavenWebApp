@@ -8,7 +8,7 @@ var config = {
     entry: {
         kanban: __dirname + "/app/kanban/App.js",
         contactList: __dirname + "/app/contactList/ContactsAppContainer.js",
-        routing: __dirname + "/app/routing/App.js"
+        routing: __dirname + "/app/routing/app.js"
     },
     output: {
         path: __dirname + '/public',
