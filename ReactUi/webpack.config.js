@@ -11,8 +11,9 @@ var config = {
         routing: __dirname + "/app/routing/App.js"
     },
     output: {
-        path: __dirname + "/public",
-        filename: "[name].bundle.js"
+        path: __dirname + '/public',
+        filename: '[name].bundle.js',
+        chunkFilename: '[id].chunk.js'
     },
     module: {
         loaders: [{
@@ -22,6 +23,9 @@ var config = {
             query: {
                 presets: ['es2015', 'react']
             }
+        }, {
+            test: /\.css$/,
+            loader: "style!css"
         }]
     },
     devServer: {

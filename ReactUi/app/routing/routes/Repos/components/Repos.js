@@ -5,6 +5,8 @@ import React, {Component} from 'react';
 
 import 'whatwg-fetch';
 import {Link} from 'react-router';
+import './Repos.css';
+
 
 class Repos extends Component {
     constructor() {
@@ -33,7 +35,7 @@ class Repos extends Component {
 
     render() {
         let repos = this.state.repositories.map((repo) => (
-            <li key={repo.id}>
+            <li key={repo.id} className="repos__item">
                 <Link to={"/repo/"+repo.name} activeClassName="active">{repo.name}</Link>
             </li>
         ));
