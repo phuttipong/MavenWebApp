@@ -2,7 +2,7 @@
  * Created by phuttipong on 30/4/2559.
  */
 import React, {Component} from 'react'; //save typing React.Component
-import {Container} from '../../../../Flux/node_modules/flux/utils';
+import {Container} from 'flux/utils';
 
 import 'whatwg-fetch';
 import update from 'react-addons-update';//support update()
