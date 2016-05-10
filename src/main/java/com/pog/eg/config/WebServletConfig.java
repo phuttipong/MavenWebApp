@@ -52,16 +52,8 @@ public class WebServletConfig extends WebMvcConfigurerAdapter {
         registry.addMapping("/**").allowedOrigins("http://localhost:63343");
     }
 
-    /**
-     * Config MessageConverters
-     *
-     * register Jackson converter
-     *
-     * @param converters MessageConverterList
-     */
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-
+    @Bean
+    public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
         //Thread-safe de-serialized/serialized JSON converter
         //This will web single mapper shared across application
         //remark!! this will remain thread safe if not call setDateFormat() / setSimpleDateFormat()
@@ -82,7 +74,20 @@ public class WebServletConfig extends WebMvcConfigurerAdapter {
         converter.setObjectMapper(mapper);
         //End of config Jackson converter
 
-        converters.add(converter);
+        return converter;
+    }
+
+    /**
+     * Config MessageConverters
+     * <p>
+     * register Jackson converter
+     *
+     * @param converters MessageConverterList
+     */
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+
+        converters.add(jacksonMessageConverter());
 
         super.configureMessageConverters(converters);
     }

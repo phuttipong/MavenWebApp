@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="MavenWebApp:war exploded">
-    <output-path>$PROJECT_DIR$/target/MavenWebApp</output-path>
+    <output-path>$PROJECT_DIR$/target/WebApp</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -35,10 +35,12 @@
           <element id="library" level="project" name="Maven: org.javassist:javassist:3.16.1-GA" />
           <element id="library" level="project" name="Maven: org.unbescape:unbescape:1.1.0.RELEASE" />
           <element id="library" level="project" name="Maven: org.thymeleaf:thymeleaf-spring4:2.1.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.mockito:mockito-all:1.10.19" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-test:4.2.5.RELEASE" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/target/MavenWebApp/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/target/WebApp/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="MavenWebApp/web/Web" />
     </root>
