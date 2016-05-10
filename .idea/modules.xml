@@ -8,6 +8,7 @@
       <module fileurl="file://$PROJECT_DIR$/ReactUi/ReactUi.iml" filepath="$PROJECT_DIR$/ReactUi/ReactUi.iml" />
       <module fileurl="file://$PROJECT_DIR$/SimpleFlux/SimpleFlux.iml" filepath="$PROJECT_DIR$/SimpleFlux/SimpleFlux.iml" />
       <module fileurl="file://$PROJECT_DIR$/Test/Test.iml" filepath="$PROJECT_DIR$/Test/Test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/WebixUi/WebixUi.iml" filepath="$PROJECT_DIR$/WebixUi/WebixUi.iml" />
     </modules>
   </component>
 </project>
