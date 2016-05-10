@@ -87,7 +87,7 @@ gulp.task('build', ["clean"], function () {
 
 
 gulp.task('lint', function () {
-    return gulp.src(['./views/**/*.js', './helpers/**/*.js', './models/**/*.js', './*.js', "!./jshint.conf.js"])
+    return gulp.src(['./views/**/*.js', './helpers/**/*.js', './models/**/*.js', './*.js', "!./\.jshintrc"])
         .pipe(jshint())
         .pipe(jshint.reporter('default'))
         .pipe(jshint.reporter('fail'));
