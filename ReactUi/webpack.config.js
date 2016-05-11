@@ -1,8 +1,8 @@
-var webpack = require('webpack');
-
 /*
  * Default webpack configuration for development
  */
+var webpack = require('webpack');
+
 var config = {
     devtool: 'eval-source-map',
     entry: {
