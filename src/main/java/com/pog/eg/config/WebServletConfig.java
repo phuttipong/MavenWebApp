@@ -15,8 +15,8 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -45,12 +45,16 @@ public class WebServletConfig extends WebMvcConfigurerAdapter {
     Environment webServletConfig;
 
     /**
-     * Allow web application use web service in Development
+     * Add resource handler for static and uiDevAsset folders.
+     * 'static' folder uses for static assets bound to server.
+     * 'uiDevAsset' folder uses for processed UI files. so we can clean up easily. this folder is ignored from Git.
      */
     @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedOrigins("http://localhost:63343");
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/", "classpath:/uiDevAsset/");
     }
+
 
     @Bean
     public MappingJackson2HttpMessageConverter jacksonMessageConverter() {
