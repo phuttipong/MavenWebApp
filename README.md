@@ -12,3 +12,6 @@ Based on Spring 4
 After build UI project then copy build files to folder src/main/resources/uiDevAsset/. Run or debug Dev(Tomcat Server) configuration.
 Then go to http://localhost:8080/static/index.html
 
+### Controller
+determine return view or json error response by check request header "X-Requested-With": "XMLHttpRequest"
+

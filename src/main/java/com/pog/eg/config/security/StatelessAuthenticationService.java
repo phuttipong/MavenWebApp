@@ -17,6 +17,12 @@ import java.io.IOException;
  * <p>
  * Client must store second part of latest AUTH-TOKEN in cookie using key CSRF_TOKEN after receive response
  * and also set header name AUTH_HEADER_NAME with it.
+ * eg. server return response with header
+ * X-AUTH-TOKEN: eyJ1c2Vybm.51dH87ioykFFufy9hn2ro=
+ * then client must set cookie and add header as follow
+ *
+ * Cookie:CSRF-TOKEN=eyJ1c2Vybm.51dH87ioykFFufy9hn2ro=;
+ * X-AUTH-TOKEN: eyJ1c2Vybm.51dH87ioykFFufy9hn2ro=
  *
  * @author phuttipong
  * @version %I%

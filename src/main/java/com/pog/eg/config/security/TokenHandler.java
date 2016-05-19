@@ -43,7 +43,7 @@ final class TokenHandler {
         // check csrf part
         if (csrfToken == null)
             return null;
-        else if (!(csrfToken + "=").equals(parts[1]))
+        else if (!(csrfToken + "=").equals(token))
             return null;
 
         if (parts.length == 2 && parts[0].length() > 0 && parts[1].length() > 0) {
