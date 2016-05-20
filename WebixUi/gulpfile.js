@@ -1,4 +1,9 @@
 var debug_export = false;
+var prod_domain = "tour.tst.co.th";
+var test_domain = "localhost:8080";
+var prod_deploy_path = "./deploy/";
+//"../../../Apache Tomcat/apache-tomcat-8.0.20/webapps/ROOT/WEB-INF/classes/uiDevAsset/";
+var test_deploy_path = "./deploy/";
 
 var gulp = require('gulp');
 var glob = require('glob');
@@ -17,9 +22,9 @@ gulp.task("css", function () {
     return build_css();
 });
 
-function build_css() {
+function build_css(prod) {
     return gulp.src('./assets/*.css')
-        .pipe(gulp.dest('./deploy/assets'));
+        .pipe(gulp.dest((prod ? prod_deploy_path : test_deploy_path) + 'assets'));
 }
 
 gulp.task('js', function () {
@@ -63,17 +68,17 @@ function build_js(prod) {
     })
         .pipe(_if(debug_export, sourcemaps.init()))
         .pipe(_if(prod == true, uglify()))
-        .pipe(_if(prod == true, replace("localhost:8080", "tour.tst.co.th")))
+        .pipe(_if(prod == true, replace(test_domain, prod_domain)))
         .pipe(_if(debug_export, sourcemaps.write("./")))
-        .pipe(gulp.dest('./deploy/'));
+        .pipe(gulp.dest(prod ? prod_deploy_path : test_deploy_path));
 }
 
-function build_assets() {
+function build_assets(prod) {
     return gulp.src("./assets/imgs/**/*.*")
-        .pipe(gulp.dest("./deploy/assets/imgs/"));
+        .pipe(gulp.dest((prod ? prod_deploy_path : test_deploy_path) + "assets/imgs/"));
 }
 
-function build_index() {
+function build_index(prod) {
     var build = (new Date()) * 1;
 
     return gulp.src("./index.html")
@@ -85,7 +90,7 @@ function build_index() {
         .pipe(replace("require.config", "webix.production = true; require.config"))
         .pipe(replace(/libs\/webix\/codebase\//g, '//cdn.webix.com/edge/'))
 
-        .pipe(gulp.dest("./deploy/"));
+        .pipe(gulp.dest(prod ? prod_deploy_path : test_deploy_path));
 }
 
 function build_server() {
@@ -96,21 +101,28 @@ function build_server() {
 }
 
 gulp.task("clean", function () {
-    return gulp.src("deploy/*", {read: false}).pipe(rimraf());
+    return gulp.src(prod_deploy_path + "*", {read: false}).pipe(rimraf());
+});
+
+gulp.task("clean-test", function () {
+    //for safety
+    //Files and folders outside the current working directory can be removed with force option.
+    //rimraf({ force: true })
+    return gulp.src(test_deploy_path + "*", {read: false}).pipe(rimraf());
 });
 
 gulp.task('build', ["clean"], function () {
     //event-stream's merge function merge streams from different methods.
     return require('event-stream').merge(
         build_js(true),
-        build_css(),
-        build_assets(),
-        build_index()
+        build_css(true),
+        build_assets(true),
+        build_index(true)
     );
 
 });
 
-gulp.task('test', ["clean"], function () {
+gulp.task('test', ["clean-test"], function () {
 
     return require('event-stream').merge(
         build_js(),
