@@ -26,7 +26,7 @@ gulp.task('js', function () {
     return build_js();
 });
 
-function build_js() {
+function build_js(prod) {
     //create list of module-name in views folder
     var views = glob.sync("views/**/*.js").map(function (value) {
         return value.replace(".js", ""); //Relative module names are relative to other names, not paths
@@ -62,9 +62,37 @@ function build_js() {
         include: ["libs/almond/almond.js"].concat(views).concat(locales)
     })
         .pipe(_if(debug_export, sourcemaps.init()))
-        .pipe(uglify())
+        .pipe(_if(prod == true, uglify()))
+        .pipe(_if(prod == true, replace("localhost:8080", "tour.tst.co.th")))
         .pipe(_if(debug_export, sourcemaps.write("./")))
         .pipe(gulp.dest('./deploy/'));
+}
+
+function build_assets() {
+    return gulp.src("./assets/imgs/**/*.*")
+        .pipe(gulp.dest("./deploy/assets/imgs/"));
+}
+
+function build_index() {
+    var build = (new Date()) * 1;
+
+    return gulp.src("./index.html")
+        .pipe(replace('data-main="app" src="libs/requirejs/require.js"', 'src="app.js"'))
+        .pipe(replace('<script type="text/javascript" src="libs/less/dist/less.min.js"></script>', ''))
+        .pipe(replace(/rel\=\"stylesheet\/less\" href=\"(.*?)\.less\"/g, 'rel="stylesheet" href="$1.css"'))
+        .pipe(replace(/\.css\"/g, '.css?' + build + '"'))
+        .pipe(replace(/\.js\"/g, '.js?' + build + '"'))
+        .pipe(replace("require.config", "webix.production = true; require.config"))
+        .pipe(replace(/libs\/webix\/codebase\//g, '//cdn.webix.com/edge/'))
+
+        .pipe(gulp.dest("./deploy/"));
+}
+
+function build_server() {
+    return gulp.src(["./server/**/*.*",
+        "!./server/*.log", "!./server/config.*",
+        "!./server/dev/**/*.*", "!./server/dump/**/*.*"])
+        .pipe(gulp.dest("./deploy/server/"))
 }
 
 gulp.task("clean", function () {
@@ -72,31 +100,23 @@ gulp.task("clean", function () {
 });
 
 gulp.task('build', ["clean"], function () {
-    var build = (new Date()) * 1;
-
     //event-stream's merge function merge streams from different methods.
+    return require('event-stream').merge(
+        build_js(true),
+        build_css(),
+        build_assets(),
+        build_index()
+    );
+
+});
+
+gulp.task('test', ["clean"], function () {
+
     return require('event-stream').merge(
         build_js(),
         build_css(),
-        //assets
-        gulp.src("./assets/imgs/**/*.*")
-            .pipe(gulp.dest("./deploy/assets/imgs/")),
-        //index
-        gulp.src("./index.html")
-            .pipe(replace('data-main="app" src="libs/requirejs/require.js"', 'src="app.js"'))
-            .pipe(replace('<script type="text/javascript" src="libs/less/dist/less.min.js"></script>', ''))
-            .pipe(replace(/rel\=\"stylesheet\/less\" href=\"(.*?)\.less\"/g, 'rel="stylesheet" href="$1.css"'))
-            .pipe(replace(/\.css\"/g, '.css?' + build + '"'))
-            .pipe(replace(/\.js\"/g, '.js?' + build + '"'))
-            .pipe(replace("require.config", "webix.production = true; require.config"))
-            .pipe(replace(/libs\/webix\/codebase\//g, '//cdn.webix.com/edge/'))
-            .pipe(gulp.dest("./deploy/")),
-        //server
-        gulp.src(["./server/**/*.*",
-                "!./server/*.log", "!./server/config.*",
-                "!./server/dev/**/*.*", "!./server/dump/**/*.*"])
-            .pipe(gulp.dest("./deploy/server/"))
-    );
+        build_assets(),
+        build_index());
 
 });
 
