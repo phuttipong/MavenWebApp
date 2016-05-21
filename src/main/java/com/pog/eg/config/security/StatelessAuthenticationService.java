@@ -14,59 +14,76 @@ import java.io.IOException;
 
 /**
  * This class hold main logic of stateless protection.
- * <p>
- * Client must store second part of latest AUTH-TOKEN in cookie using key CSRF_TOKEN after receive response
- * and also set header name AUTH_HEADER_NAME with it.
- * eg. server return response with header
- * X-AUTH-TOKEN: eyJ1c2Vybm.51dH87ioykFFufy9hn2ro=
- * then client must set cookie and add header as follow
- *
- * Cookie:CSRF-TOKEN=eyJ1c2Vybm.51dH87ioykFFufy9hn2ro=;
- * X-AUTH-TOKEN: eyJ1c2Vybm.51dH87ioykFFufy9hn2ro=
  *
  * @author phuttipong
  * @version %I%
  * @since 7/4/2559
  */
 class StatelessAuthenticationService {
-
-    private static final String CSRF_TOKEN = "CSRF-TOKEN";
     private static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
-    private static final long TEN_MINUTES = 1000 * 60 * 10;
+    private static final long TOKEN_LIFETIME = 1000 * 60 * 15;
 
     private final TokenHandler tokenHandler;
+    private final MultiRolesUserDetailsService userDetailsService;
 
     @SuppressWarnings("SameParameterValue")
-    StatelessAuthenticationService(String secret) {
+    StatelessAuthenticationService(String secret, MultiRolesUserDetailsService userDetailsService) {
         tokenHandler = new TokenHandler(DatatypeConverter.parseBase64Binary(secret));
+        this.userDetailsService = userDetailsService;
     }
 
-    void addAuthentication(HttpServletResponse response, UserAuthentication authentication) {
+    void setToken(HttpServletResponse response, UserAuthentication authentication) {
+        if (authentication == null)
+            return;
+
         final ScUserEntity user = authentication.getDetails();
-        user.setExpires(System.currentTimeMillis() + TEN_MINUTES);
-        response.addHeader(AUTH_HEADER_NAME, tokenHandler.createTokenForUser(user));
+        //if Expire is not set, then it is login.
+        if (user.getExpires() == 0) {
+            user.setExpires(System.currentTimeMillis() + TOKEN_LIFETIME);
+        }
+        Cookie cookie = new Cookie(AUTH_HEADER_NAME, tokenHandler.createTokenForUser(user));
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(-1);
+        // TODO: 21/5/2559  set secure flag if use https
+        //cookie.setSecure(true);
+        response.addCookie(cookie);
     }
 
-    Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        final String token = request.getHeader(AUTH_HEADER_NAME);
+    void writePermissionToBody(HttpServletResponse response) throws IOException {
+        UserProfile userPermission = new UserProfile(System.currentTimeMillis(), userDetailsService.getFullname(), userDetailsService.getPermission());
+        response.getWriter().print(new ObjectMapper().writeValueAsString(userPermission));
+    }
 
-        // get csrf token
+    UserAuthentication getUserAuthentication(Authentication authentication) {
+        return new UserAuthentication((ScUserEntity) authentication.getPrincipal());
+    }
+
+    UserAuthentication getUserAuthentication(HttpServletRequest request) {
+        String token = null;
+
+        // get token
         final Cookie[] cookies = request.getCookies();
-        String csrfCookieValue = null;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(CSRF_TOKEN)) {
-                    csrfCookieValue = cookie.getValue();
+                // no need to check  && cookie.isHttpOnly() because
+                // browser not allow to override our httpOnly cookie.
+                if (cookie.getName().equals(AUTH_HEADER_NAME)) {
+                    token = cookie.getValue();
                 }
             }
         }
 
         if (token != null) {
-            final ScUserEntity user = tokenHandler.parseUserFromToken(token, csrfCookieValue);
+            final ScUserEntity user = tokenHandler.parseUserFromToken(token);
             if (user != null) {
-                user.setExpires(System.currentTimeMillis() + TEN_MINUTES);
-                response.setHeader(AUTH_HEADER_NAME, tokenHandler.createTokenForUser(user));
-                return new UserAuthentication(user);
+                if (user.getExpires() > System.currentTimeMillis()) {
+                    return new UserAuthentication(user);
+                } else {
+                    final ScUserEntity authenticatedUser = userDetailsService.loadUserByUsername(user.getUsername());
+                    return new UserAuthentication(authenticatedUser);
+                }
+
             }
         }
         return null;

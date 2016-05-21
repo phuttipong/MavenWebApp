@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Date;
 
 /**
  * This class consists methods that serialize/deserialize an authentication token.
@@ -37,14 +36,12 @@ final class TokenHandler {
         }
     }
 
-    ScUserEntity parseUserFromToken(String token, String csrfToken) {
+    /**
+     * @param token Token string to parse.
+     * @return null if not token or it is invalid token.
+     */
+    ScUserEntity parseUserFromToken(String token) {
         final String[] parts = token.split(SEPARATOR_SPLITTER);
-
-        // check csrf part
-        if (csrfToken == null)
-            return null;
-        else if (!(csrfToken + "=").equals(token))
-            return null;
 
         if (parts.length == 2 && parts[0].length() > 0 && parts[1].length() > 0) {
             try {
@@ -53,12 +50,7 @@ final class TokenHandler {
 
                 boolean validHash = Arrays.equals(createHmac(userBytes), hash);
                 if (validHash) {
-                    final ScUserEntity user = fromJSON(userBytes);
-
-                    // check expire date
-                    if (new Date().getTime() < user.getExpires()) {
-                        return user;
-                    }
+                    return fromJSON(userBytes);
                 }
             } catch (IllegalArgumentException e) {
                 //log tempering attempt here

@@ -25,13 +25,11 @@ import java.io.IOException;
 class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     private final StatelessAuthenticationService statelessAuthenticationService;
-    private final MultiRolesUserDetailsService userDetailsService;
 
     @SuppressWarnings("SameParameterValue")
     StatelessLoginFilter(HttpMethod urlMethod, String urlMapping, StatelessAuthenticationService statelessAuthenticationService,
-                         MultiRolesUserDetailsService userDetailsService, AuthenticationManager authManager) {
+                         AuthenticationManager authManager) {
         super(new AntPathRequestMatcher(urlMapping, urlMethod.toString()));
-        this.userDetailsService = userDetailsService;
         this.statelessAuthenticationService = statelessAuthenticationService;
         setAuthenticationManager(authManager);
     }
@@ -51,14 +49,15 @@ class StatelessLoginFilter extends AbstractAuthenticationProcessingFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) throws IOException, ServletException {
 
-        // Lookup the complete ScUserEntity object from the database and create an Authentication for it
-        final ScUserEntity authenticatedUser = userDetailsService.loadUserByUsername(authentication.getName());
-        final UserAuthentication userAuthentication = new UserAuthentication(authenticatedUser);
+        //Use customize authentication object.
+        UserAuthentication customAuthentication = statelessAuthenticationService.getUserAuthentication(authentication);
 
         // Add the custom token as HTTP header to the response
-        statelessAuthenticationService.addAuthentication(response, userAuthentication);
+        statelessAuthenticationService.setToken(response, customAuthentication);
 
         // Add the authentication to the Security context
-        SecurityContextHolder.getContext().setAuthentication(userAuthentication);
+        SecurityContextHolder.getContext().setAuthentication(customAuthentication);
+
+        statelessAuthenticationService.writePermissionToBody(response);
     }
 }

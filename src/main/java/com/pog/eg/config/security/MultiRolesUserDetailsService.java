@@ -2,6 +2,8 @@ package com.pog.eg.config.security;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -9,9 +11,7 @@ import javax.sql.DataSource;
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * This is a customized UserDetailsService which implement multi-roles data structures.
@@ -23,9 +23,16 @@ import java.util.UUID;
  * @version %I%
  * @since 6/4/2559
  */
-class MultiRolesUserDetailsService implements UserDetailsService {
+public class MultiRolesUserDetailsService implements UserDetailsService {
 
     private final JdbcTemplate jdbcTemplate;
+
+    private final Map<String, HashSet<permission>> roleToPermission = Collections.unmodifiableMap(
+            new HashMap<String, HashSet<permission>>() {{
+                put("ROLE_ADMIN", new HashSet<>(Arrays.asList(
+                        new permission[]{permission.viewBankAccounts}
+                )));
+            }});
 
     MultiRolesUserDetailsService(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -59,11 +66,72 @@ class MultiRolesUserDetailsService implements UserDetailsService {
         return user;
     }
 
+    /**
+     * Give permission list of current user.
+     *
+     * @return empty collection or collection of permission.
+     */
+    public Collection<permission> getPermission() {
+
+        Set<permission> permissionSet = new HashSet<>();
+
+        if (SecurityContextHolder.getContext().getAuthentication() == null)
+            return permissionSet;
+
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
+        for (GrantedAuthority auth : authorities) {
+            HashSet<permission> permissions = roleToPermission.get(auth.getAuthority());
+
+            if (permissions == null)
+                continue;
+
+            permissionSet.addAll(permissions);
+        }
+        return permissionSet;
+
+    }
+
+    /**
+     * Check if current user has given permission
+     *
+     * @param permission the permission to check
+     */
+    public boolean hasPermission(permission permission) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null)
+            return false;
+
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
+        for (GrantedAuthority auth : authorities) {
+            HashSet<permission> permissions = roleToPermission.get(auth.getAuthority());
+            if (permissions == null)
+                continue;
+
+            if (permissions.contains(permission))
+                return true;
+        }
+
+        return false;
+    }
+
+    public String getFullname() {
+        if (SecurityContextHolder.getContext().getAuthentication() == null)
+            return "";
+
+        UserAuthentication authentication = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getDetails().getFullname();
+    }
+
     private UUID getUuidFromByteArray(byte[] bytes) {
         ByteBuffer bb = ByteBuffer.wrap(bytes);
         long high = bb.getLong();
         long low = bb.getLong();
         return new UUID(high, low);
+    }
+
+    public enum permission {
+        viewBankAccounts
     }
 
     private class UserData {

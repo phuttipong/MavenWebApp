@@ -8,6 +8,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String PAGE_NOT_FOUND_URL = "/reservedForSpringSecurity";
     private static final String LOGIN_URL = "/api/login";
+    private static final String PROFILE_URL = "/sc/auth/profile";
     private static final String DB_DRIVER_NAME = "com.mysql.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/web_app";
     private static final String DB_USERNAME = "app";
@@ -40,11 +42,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         userDetailsService = new MultiRolesUserDetailsService(securityDataSource());
-        statelessAuthenticationService = new StatelessAuthenticationService(TOKEN_SECRET);
+        statelessAuthenticationService = new StatelessAuthenticationService(TOKEN_SECRET, userDetailsService);
 
         auth
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(new BCryptPasswordEncoder(11));
+    }
+
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                // Spring Security should completely ignore URLs starting with /resources/
+                .antMatchers("/", "/favicon.ico", "/static/**");
     }
 
     protected void configure(HttpSecurity http) throws Exception {
@@ -54,16 +62,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
 
-                //allow anonymous resource requests
-                .antMatchers("/").permitAll()
-                .antMatchers("/favicon.ico").permitAll()
-                .antMatchers("/resources/**").permitAll()
-
                 //allow only anonymous POSTs to login
                 .antMatchers(HttpMethod.POST, LOGIN_URL).permitAll()
 
-                //defined Admin only API area
-                .antMatchers("/sc/**").hasRole("ADMIN");
+                //Returns true if the user is not anonymous
+                .antMatchers("/sc/**").authenticated();
     }
 
     /**
@@ -78,7 +81,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected MultiRolesUserDetailsService userDetailsService() {
+    @Bean
+    public MultiRolesUserDetailsService userDetailsService() {
         return userDetailsService;
     }
 
@@ -112,10 +116,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
 
                 // custom JSON based authentication by POST of {"username":"<name>","password":"<password>"} which sets the token header upon authentication
-                .addFilterBefore(new StatelessLoginFilter(HttpMethod.POST, LOGIN_URL, statelessAuthenticationService, userDetailsService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new StatelessLoginFilter(HttpMethod.POST, LOGIN_URL, statelessAuthenticationService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 
                 // custom AuthenticationToken based authentication based on the header previously given to the client
-                .addFilterBefore(new StatelessAuthenticationFilter(statelessAuthenticationService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new StatelessAuthenticationFilter(statelessAuthenticationService, PROFILE_URL), UsernamePasswordAuthenticationFilter.class)
 
                 //When receive unauthorized request or unrecognized request, then return 404.html for non-AJAX, 404 response for AJAX.
                 .exceptionHandling()
