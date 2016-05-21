@@ -12,7 +12,10 @@ define([
         template: "<span class='webix_icon fa-#icon#'></span> #value# ",
         data: [
             {value: "DashBoard", id: "start", href: "#!/top/start", icon: "envelope-o"},
-            {value: "Data", id: "data", href: "#!/top/data", icon: "briefcase"}
+            {value: "Data", id: "data", href: "#!/top/data", icon: "briefcase"},
+            {$template: "Separator"},
+            {value: "Logout", id: "logout", href: "#!/logout", icon: "sign-out"}
+
         ]
     };
 

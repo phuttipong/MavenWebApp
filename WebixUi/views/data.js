@@ -1,5 +1,5 @@
 define([
-    "models/records"
+    "models/movie"
 ], function (records) {
 
     var ui = {
