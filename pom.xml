@@ -192,8 +192,4 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <finalName>MavenWebApp</finalName>
-    </build>
 </project>
