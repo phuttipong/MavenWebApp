@@ -17,7 +17,7 @@ var config = {
     },
 
     output: {
-        path: __dirname + '/public',
+        path: __dirname + '/deploy',
         filename: '[name].js',
         chunkFilename: '[id].chunk.js'
     },
