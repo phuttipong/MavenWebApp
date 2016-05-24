@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 /**
  * Spring Security Configuration class.
@@ -28,8 +29,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String PAGE_NOT_FOUND_URL = "/reservedForSpringSecurity";
-    private static final String LOGIN_URL = "/api/login";
-    private static final String PROFILE_URL = "/sc/auth/profile";
+    private static final String SESSION_API = "/api/session";
+    private static final String PROFILE_API = "/sc/session/profile";
     private static final String DB_DRIVER_NAME = "com.mysql.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/web_app";
     private static final String DB_USERNAME = "app";
@@ -63,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 //allow only anonymous POSTs to login
-                .antMatchers(HttpMethod.POST, LOGIN_URL).permitAll()
+                .antMatchers(HttpMethod.POST, SESSION_API).permitAll()
 
                 //Returns true if the user is not anonymous
                 .antMatchers("/sc/**").authenticated();
@@ -115,11 +116,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .csrf().disable()
 
-                // custom JSON based authentication by POST of {"username":"<name>","password":"<password>"} which sets the token header upon authentication
-                .addFilterBefore(new StatelessLoginFilter(HttpMethod.POST, LOGIN_URL, statelessAuthenticationService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+                // custom JSON based logout by DELETE
+                .addFilterBefore(new StatelessLogoutFilter(statelessAuthenticationService, SESSION_API), LogoutFilter.class)
 
-                // custom AuthenticationToken based authentication based on the header previously given to the client
-                .addFilterBefore(new StatelessAuthenticationFilter(statelessAuthenticationService, PROFILE_URL), UsernamePasswordAuthenticationFilter.class)
+                // custom JSON based authentication by POST of {"username":"<name>","password":"<password>"}.
+                .addFilterBefore(new StatelessLoginFilter(HttpMethod.POST, SESSION_API, statelessAuthenticationService, authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+
+                // custom AuthenticationToken based on the token previously given to the client
+                .addFilterBefore(new StatelessAuthenticationFilter(statelessAuthenticationService, PROFILE_API), UsernamePasswordAuthenticationFilter.class)
 
                 //When receive unauthorized request or unrecognized request, then return 404.html for non-AJAX, 404 response for AJAX.
                 .exceptionHandling()

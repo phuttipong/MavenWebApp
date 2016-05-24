@@ -59,12 +59,25 @@ final class TokenHandler {
         return null;
     }
 
+    /**
+     * Create token from user datas.
+     */
     String createTokenForUser(ScUserEntity user) {
         byte[] userBytes = toJSON(user);
         byte[] hash = createHmac(userBytes);
         return toBase64(userBytes) +
                 SEPARATOR +
                 toBase64(hash);
+    }
+
+    /**
+     * Generate token key from token
+     */
+    String getTokenKey(String token) {
+        String used = token.substring(0, token.length() % 15);
+        byte[] hash = createHmac(used.getBytes());
+        String hashedStr = toBase64(hash);
+        return hashedStr.length() > 15 ? hashedStr.substring(0, 15) : hashedStr;
     }
 
     private ScUserEntity fromJSON(final byte[] userBytes) {
