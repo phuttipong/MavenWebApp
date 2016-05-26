@@ -52,7 +52,7 @@ public class WebServletConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/favicon.ico", "/static/**")
-                .addResourceLocations("classpath:/static/", "classpath:/uiDevAsset/");
+                .addResourceLocations("classpath:/static/");
     }
 
 

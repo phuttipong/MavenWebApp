@@ -75,7 +75,7 @@ final class TokenHandler {
      */
     String getTokenKey(String token) {
         int sepIdx = token.indexOf(SEPARATOR);
-        String used = token.substring(sepIdx - 5, sepIdx + 5);
+        String used = token.substring(sepIdx - 5, sepIdx + 5); // believe that some part from first half and second half is most dynamic.
         byte[] hash = createHmac(used.getBytes());
         String hashedStr = toBase64(hash);
         return hashedStr.length() > 15 ? hashedStr.substring(0, 15) : hashedStr;

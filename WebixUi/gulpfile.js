@@ -2,7 +2,7 @@ var debug_export = false;
 var prod_domain = "tour.tst.co.th";
 var test_domain = "localhost:8080";
 var prod_deploy_path = "./deploy/";
-//"../../../Apache Tomcat/apache-tomcat-8.0.20/webapps/ROOT/WEB-INF/classes/uiDevAsset/";
+//"../../../Apache Tomcat/apache-tomcat-8.0.20/webapps/ROOT/WEB-INF/classes/static/";
 var test_deploy_path = "./deploy/";
 
 var gulp = require('gulp');

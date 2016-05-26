@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                // Spring Security should completely ignore URLs starting with /resources/
+                // Spring Security should completely ignore resource URLs.
                 .antMatchers("/", "/favicon.ico", "/static/**");
     }
 
