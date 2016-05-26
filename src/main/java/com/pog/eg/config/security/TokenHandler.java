@@ -74,7 +74,8 @@ final class TokenHandler {
      * Generate token key from token
      */
     String getTokenKey(String token) {
-        String used = token.substring(0, token.length() % 15);
+        int sepIdx = token.indexOf(SEPARATOR);
+        String used = token.substring(sepIdx - 5, sepIdx + 5);
         byte[] hash = createHmac(used.getBytes());
         String hashedStr = toBase64(hash);
         return hashedStr.length() > 15 ? hashedStr.substring(0, 15) : hashedStr;

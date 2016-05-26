@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -110,11 +111,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     private void configStatelessProtection(HttpSecurity http) throws Exception {
         http
-                // Spring 4 enable csrf by default.
-                // disable and we use our CSRF protection.
-                .formLogin().disable()
-                .httpBasic().disable()
-                .csrf().disable()
+                .formLogin().disable() //disable built-in form authentication.
+                .httpBasic().disable() //disable http-basic authentication.
+                .csrf().disable() // Spring 4 enable csrf by default. disable and we use our CSRF protection.
+                .anonymous().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // our protection is stateless.
+                .and()
 
                 // custom JSON based logout by DELETE
                 .addFilterBefore(new StatelessLogoutFilter(statelessAuthenticationService, SESSION_API), LogoutFilter.class)
