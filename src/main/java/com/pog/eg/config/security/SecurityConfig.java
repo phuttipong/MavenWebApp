@@ -29,9 +29,9 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String PAGE_NOT_FOUND_URL = "/reservedForSpringSecurity";
-    private static final String SESSION_API = "/api/session";
-    private static final String PROFILE_API = "/sc/session/profile";
+    private static final String PAGE_NOT_FOUND_URL = "/acc/httpError/404";
+    private static final String SESSION_API = "/acc/session";
+    private static final String PROFILE_API = "/acc/session/sc/profile";
     private static final String DB_DRIVER_NAME = "com.mysql.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/web_app";
     private static final String DB_USERNAME = "app";
