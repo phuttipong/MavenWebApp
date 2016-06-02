@@ -9,7 +9,7 @@ package com.pog.eg.domain;
  * @version %I%
  * @since 25/4/2559
  */
-public class Movie {
+public class Sample {
     private final int id;
     private String title;
     private String year;
@@ -17,7 +17,7 @@ public class Movie {
     private double rating;
     private int rank;
 
-    public Movie(int id, String title, String year, int votes, double rating, int rank) {
+    public Sample(int id, String title, String year, int votes, double rating, int rank) {
         this.id = id;
         this.title = title;
         this.year = year;

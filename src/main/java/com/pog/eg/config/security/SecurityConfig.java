@@ -68,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, SESSION_API).permitAll()
 
                 //Returns true if the user is not anonymous
-                .antMatchers("/sc/**").authenticated();
+                .regexMatchers(".*\\/sc\\/.*").authenticated();
     }
 
     /**

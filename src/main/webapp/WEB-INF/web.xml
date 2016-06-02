@@ -7,14 +7,23 @@
 
     <display-name>Archetype Created Web Application with Spring 4 (restful)</display-name>
 
+    <!-- Listener to create the Spring Container shared by all Servlets and Filters -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>
+            classpath*:META-INF/spring/spring-master.xml
+        </param-value>
+    </context-param>
+
     <servlet>
         <servlet-name>sample-web</servlet-name>
         <servlet-class>
             org.springframework.web.servlet.DispatcherServlet
         </servlet-class>
+        <!--Define ApplicationContext of a DispatcherServlet-->
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:META-INF/spring/root.xml</param-value>
+            <param-value>classpath:META-INF/spring/spring-master-web.xml</param-value>
         </init-param>
         <!--We will use @ControllerAdvice to handle exception which throw with in controller classes, so will have to set this param-->
         <init-param>
@@ -26,7 +35,7 @@
 
     <servlet-mapping>
         <servlet-name>sample-web</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/acc/*</url-pattern>
     </servlet-mapping>
 
     <!--This set default @Profile("production")-->

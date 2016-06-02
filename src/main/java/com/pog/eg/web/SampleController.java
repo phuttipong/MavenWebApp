@@ -1,5 +1,6 @@
 package com.pog.eg.web;
 
+import com.pog.eg.domain.Sample;
 import com.pog.eg.service.SampleService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -8,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,11 +22,16 @@ import java.util.TimeZone;
  * Sample web class showing usages of Spring framework.
  * This web annotate with @RestController so it will return content instead of passing to view-engine.
  *
+ * <p>
+ * relate to URI pattern-comparison
+ * See <a href="https://github.com/spring-projects/spring-framework/commit/e4182da4ebb1197b84f979fea9e89a76343f242e>commit e4182d</a>
+ *
  * @author phuttipong
  * @version %I%, %G%
  */
 @SuppressWarnings({"SpringMVCViewInspection", "SameReturnValue"})
 @RestController
+@RequestMapping("**/sample")
 public class SampleController {
 
     private static final Logger logger = LoggerFactory.getLogger(SampleController.class);
@@ -36,24 +43,42 @@ public class SampleController {
     private MessageSource clientString;
 
     /**
+     * Match GET \*\*\/sample\/getList
+     * This method use service class capability. Show that we can easily plug service without making coupling between those classes.
+     */
+    @RequestMapping(value = "/getList", method = RequestMethod.GET)
+    public List getList() {
+        return simpleService.buildSampleList();
+    }
+
+    /**
+     * Match GET \*\*\/sample\/1 or \*\*\/sample\/str
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Sample show(@PathVariable("id") int id) {
+        // business logic to retrieve an entity
+        return new Sample(id, "The Shawshank Redemption", "1994", 678790, 9.2, 1);
+    }
+
+    /**
+     * Match DELETE \*\*\/sample\/1 or \*\*\/sample\/str
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public Sample delete(@PathVariable("id") int id) {
+        // business logic to delete an entity and
+        // return the appropriate view goes here
+        return new Sample(id, "The Shawshank Redemption", "1994", 678790, 9.2, 1);
+    }
+
+    /**
      * Simple as it is.
      *
      * @return String Some Hello World text.
      */
-    @RequestMapping(value = "/api/text", method = RequestMethod.GET)
+    @RequestMapping(value = "/text", method = RequestMethod.GET)
     public String getText() {
         logger.info("logger work fine.");
         return "Simple Hello World!, return string in response body";
-    }
-
-    /**
-     * This method use service class capability. Show that we can easily plug service without making coupling between those classes.
-     *
-     * @return List Sample list of String.
-     */
-    @RequestMapping(value = "/api/list", method = RequestMethod.GET)
-    public List getList() {
-        return simpleService.buildSampleList();
     }
 
     /**
@@ -62,7 +87,7 @@ public class SampleController {
      *
      * @return LocalDateTime Local time of servlet.
      */
-    @RequestMapping(value = "/api/localDateTime", method = RequestMethod.GET)
+    @RequestMapping(value = "/localDateTime", method = RequestMethod.GET)
     public LocalDateTime getLocalDateTime() {
         return new LocalDateTime();
     }
@@ -73,7 +98,7 @@ public class SampleController {
      *
      * @return LocalDateTime UTC time of servlet.
      */
-    @RequestMapping(value = "/api/utcDateTime", method = RequestMethod.GET)
+    @RequestMapping(value = "/utcDateTime", method = RequestMethod.GET)
     public DateTime getDateTime() {
         return new DateTime();
     }
@@ -86,7 +111,7 @@ public class SampleController {
      *
      * @return DateTimeZone Timezone
      */
-    @RequestMapping(value = "/api/timezone", method = RequestMethod.GET)
+    @RequestMapping(value = "/timezone", method = RequestMethod.GET)
     public DateTimeZone getTimezone() {
         return DateTimeZone.getDefault();
     }
@@ -99,7 +124,7 @@ public class SampleController {
      *
      * @return DateTimeZone Timezone
      */
-    @RequestMapping(value = "/api/myLocale", method = RequestMethod.GET)
+    @RequestMapping(value = "/myLocale", method = RequestMethod.GET)
     public String getMyLocale(Locale locale, TimeZone timeZone) {
         return locale.getDisplayName() + " " + timeZone.getDisplayName();
     }
@@ -110,7 +135,7 @@ public class SampleController {
      * @param locale Session locale.
      * @return String localized greeting message.
      */
-    @RequestMapping(value = "/api/greetingMessage", method = RequestMethod.GET)
+    @RequestMapping(value = "/greetingMessage", method = RequestMethod.GET)
     public String getHelloMessage(Locale locale) {
         return clientString.getMessage("app.greeting", null, locale);
     }
@@ -129,7 +154,7 @@ public class SampleController {
     /**
      * This method always return exception. for demonstrate how GlobalControllerExceptionHandler work.
      */
-    @RequestMapping(value = "/api/error", method = RequestMethod.GET)
+    @RequestMapping(value = "/error", method = RequestMethod.GET)
     public void throwError() {
         throw new IllegalStateException("some error");
     }
