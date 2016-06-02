@@ -1,30 +1,20 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!--declare the version of the POM for your project.-->
     <modelVersion>4.0.0</modelVersion>
+
+    <!--project coordinates because they uniquely identify the project
+        the groupId uses the reverse domain of the organization that created the project
+        The artifactId is the unique name within a given groupId
+        The version is the specific release of a project.
+        No two projects may have the same combination of groupId:artifactId:version.-->
     <groupId>com.pog.eg</groupId>
     <artifactId>MavenWebApp</artifactId>
-    <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
-    <name>Web Application</name>
-    <url>http://maven.apache.org</url>
 
-    <build>
-        <finalName>WebApp</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <packaging>war</packaging>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
         <!-- Core -->
         <java-version>1.8</java-version>
         <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
@@ -192,4 +182,18 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <finalName>WebApp</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
