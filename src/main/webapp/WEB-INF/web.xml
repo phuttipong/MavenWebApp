@@ -14,7 +14,7 @@
         </servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
-            <param-value>classpath:spring/root.xml</param-value>
+            <param-value>classpath:META-INF/spring/root.xml</param-value>
         </init-param>
         <!--We will use @ControllerAdvice to handle exception which throw with in controller classes, so will have to set this param-->
         <init-param>

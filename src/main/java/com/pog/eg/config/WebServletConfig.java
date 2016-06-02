@@ -38,7 +38,7 @@ import java.util.List;
 @Configuration
 @EnableWebMvc
 @ComponentScan({"com.pog.eg.web"})
-@PropertySource("classpath:webServletConfig.properties")
+@PropertySource("classpath:META-INF/spring/webServletConfig.properties")
 public class WebServletConfig extends WebMvcConfigurerAdapter {
 
     @Autowired
