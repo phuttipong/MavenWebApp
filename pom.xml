@@ -28,6 +28,7 @@
         <org.thymeleaf-version>2.1.4.RELEASE</org.thymeleaf-version>
         <!-- DB -->
         <mysql.connector.version>5.1.36</mysql.connector.version>
+        <com.hibernate.version>4.3.11.Final</com.hibernate.version>
     </properties>
 
     <dependencies>
@@ -150,7 +151,16 @@
             <version>${mysql.connector.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${com.hibernate.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${org.springframework-version}</version>
+        </dependency>
         <!-- Testing -->
         <dependency>
             <groupId>org.hamcrest</groupId>

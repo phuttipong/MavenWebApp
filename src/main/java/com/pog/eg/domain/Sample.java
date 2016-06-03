@@ -1,5 +1,7 @@
 package com.pog.eg.domain;
 
+import javax.persistence.Entity;
+
 /**
  * [Class description.]
  * <p>
@@ -9,6 +11,7 @@ package com.pog.eg.domain;
  * @version %I%
  * @since 25/4/2559
  */
+@Entity
 public class Sample {
     private final int id;
     private String title;
