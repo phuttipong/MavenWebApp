@@ -1,5 +1,7 @@
 package com.pog.eg.web;
 
+import com.pog.eg.service.Util;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,6 +21,9 @@ import java.io.IOException;
 @ControllerAdvice
 public class ExceptionHandlerController {
 
+    @Autowired
+    private Util util;
+
     /**
      * handle NoHandlerFoundException
      * <p>
@@ -32,7 +37,7 @@ public class ExceptionHandlerController {
      */
     @ExceptionHandler(NoHandlerFoundException.class)
     public ModelAndView handleError404(HttpServletRequest request, HttpServletResponse response, Exception e) {
-        if (Util.isAjax(request)) {
+        if (util.isAjax(request)) {
             try {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             } catch (IOException e1) {
@@ -50,7 +55,7 @@ public class ExceptionHandlerController {
      */
     @ExceptionHandler(Exception.class)
     public ModelAndView handleError(HttpServletRequest request, HttpServletResponse response, Exception e) {
-        if (Util.isAjax(request)) {
+        if (util.isAjax(request)) {
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             } catch (IOException e1) {

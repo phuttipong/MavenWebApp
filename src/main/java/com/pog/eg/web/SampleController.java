@@ -1,5 +1,6 @@
 package com.pog.eg.web;
 
+import com.pog.eg.service.Util;
 import com.pog.eg.domain.Sample;
 import com.pog.eg.service.SampleService;
 import org.joda.time.DateTime;
@@ -42,33 +43,8 @@ public class SampleController {
     @Autowired
     private MessageSource clientString;
 
-    /**
-     * Match GET \*\*\/sample\/getList
-     * This method use service class capability. Show that we can easily plug service without making coupling between those classes.
-     */
-    @RequestMapping(value = "/getList", method = RequestMethod.GET)
-    public List getList() {
-        return simpleService.buildSampleList();
-    }
-
-    /**
-     * Match GET \*\*\/sample\/1 or \*\*\/sample\/str
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public Sample show(@PathVariable("id") int id) {
-        // business logic to retrieve an entity
-        return new Sample(id, "The Shawshank Redemption", "1994", 678790, 9.2, 1);
-    }
-
-    /**
-     * Match DELETE \*\*\/sample\/1 or \*\*\/sample\/str
-     */
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public Sample delete(@PathVariable("id") int id) {
-        // business logic to delete an entity and
-        // return the appropriate view goes here
-        return new Sample(id, "The Shawshank Redemption", "1994", 678790, 9.2, 1);
-    }
+    @Autowired
+    private Util util;
 
     /**
      * Simple as it is.
@@ -82,6 +58,34 @@ public class SampleController {
     }
 
     /**
+     * Match GET \*\*\/sample\/getList
+     * This method use service class capability. Show that we can easily plug service without making coupling between those classes.
+     */
+    @RequestMapping(value = "/getList", method = RequestMethod.GET)
+    public List getList() {
+        return simpleService.buildSampleList();
+    }
+
+    /**
+     * Match GET \*\*\/sample\/1 or \*\*\/sample\/str
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Sample show(@PathVariable("id") String id) {
+        // business logic to retrieve an entity
+        return simpleService.get(id);
+    }
+
+    /**
+     * Match DELETE \*\*\/sample\/1 or \*\*\/sample\/str
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    public Sample delete(@PathVariable("id") String id) {
+        // business logic to delete an entity and
+        // return the appropriate view goes here
+        return simpleService.delete(id);
+    }
+
+    /**
      * This method show that we integrate Joda-Time correctly.
      * this should equal local datetime of web server.
      *
@@ -89,7 +93,7 @@ public class SampleController {
      */
     @RequestMapping(value = "/localDateTime", method = RequestMethod.GET)
     public LocalDateTime getLocalDateTime() {
-        return new LocalDateTime();
+        return util.getLocalNow();
     }
 
     /**
@@ -100,7 +104,7 @@ public class SampleController {
      */
     @RequestMapping(value = "/utcDateTime", method = RequestMethod.GET)
     public DateTime getDateTime() {
-        return new DateTime();
+        return util.getUtcNow();
     }
 
     /**
@@ -117,16 +121,11 @@ public class SampleController {
     }
 
     /**
-     * The default time zone is derived from the system property user.timezone.
-     * If that is null or is not a valid identifier,
-     * then the value of the JDK TimeZone default is converted.
-     * If that fails, UTC is used.
      *
-     * @return DateTimeZone Timezone
      */
     @RequestMapping(value = "/myLocale", method = RequestMethod.GET)
     public String getMyLocale(Locale locale, TimeZone timeZone) {
-        return locale.getDisplayName() + " " + timeZone.getDisplayName();
+        return locale.getDisplayName() + ", " + timeZone.getDisplayName();
     }
 
     /**
@@ -135,7 +134,7 @@ public class SampleController {
      * @param locale Session locale.
      * @return String localized greeting message.
      */
-    @RequestMapping(value = "/greetingMessage", method = RequestMethod.GET)
+    @RequestMapping(value = "/localeMessage", method = RequestMethod.GET)
     public String getHelloMessage(Locale locale) {
         return clientString.getMessage("app.greeting", null, locale);
     }

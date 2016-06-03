@@ -1,27 +1,23 @@
 package com.pog.eg.service;
 
-import org.springframework.stereotype.Service;
+import com.pog.eg.domain.Sample;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This is a service show that we can put business logic here.
+ * [Class description.]
+ * <p>
+ * [Other notes.]
  *
- * @author phuttipong
- * @version %I%, %G%
+ * @author Phuttipong
+ * @version %I%
+ * @since 3/6/2559
  */
-@Service
-public class SampleService {
+public interface SampleService {
 
-    public List<String> buildSampleList(){
+    List<String> buildSampleList();
 
-        List<String> list = new ArrayList<>();
+    Sample get(String id);
 
-        list.add("item 1");
-        list.add("item 2");
-        list.add("item 3");
-
-        return list;
-    }
+    Sample delete(String id);
 }

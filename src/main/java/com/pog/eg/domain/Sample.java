@@ -12,25 +12,21 @@ import javax.persistence.Entity;
  * @since 25/4/2559
  */
 @Entity
-public class Sample {
-    private final int id;
+public class Sample extends UUIDEntity {
+
     private String title;
     private String year;
     private int votes;
     private double rating;
     private int rank;
 
-    public Sample(int id, String title, String year, int votes, double rating, int rank) {
-        this.id = id;
+    public Sample(String title, String year, int votes, double rating, int rank) {
+        super();
         this.title = title;
         this.year = year;
         this.votes = votes;
         this.rating = rating;
         this.rank = rank;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getTitle() {

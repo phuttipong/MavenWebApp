@@ -26,9 +26,9 @@ import java.util.List;
 
 /**
  * Configuration class of Web layer.
- *
+ * <p>
  * Use Joda-Time as standard date time library.
- *   - use can set default timezone by specific vm-option "-Duser.timezone=Europe/Copenhagen"
+ * - use can set default timezone by specific vm-option "-Duser.timezone=Europe/Copenhagen"
  * Use Jackson as JSON converter.
  * Use default LocaleResolver(detect locale from request header, user can change at Browser's preference option).
  *
@@ -95,6 +95,25 @@ public class WebServletConfig extends WebMvcConfigurerAdapter {
 
         super.configureMessageConverters(converters);
     }
+
+    /**
+     * Our localeResolver will detect locale by seeing 'language' property in cookie.
+     * Spring will use the most specific one first
+     *
+     *  If you do not register any “localeResolver”,
+     *  the default AcceptHeaderLocaleResolver will be used,
+     *  which resolves the locale by checking the accept-language header in the HTTP request.
+     *
+     * @return
+     */
+//    @Bean
+//    public LocaleResolver localeResolver() {
+//        CookieLocaleResolver localeResolver = new CookieLocaleResolver();
+//        localeResolver.setDefaultLocale(new Locale("en"));
+//        localeResolver.setCookieName("language");
+//        return localeResolver;
+//    }
+
 
     /**
      * Our messageSource will use message*.properties files locate in resources folder to resolve localized message
