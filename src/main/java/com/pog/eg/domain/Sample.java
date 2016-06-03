@@ -1,6 +1,9 @@
 package com.pog.eg.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * [Class description.]
@@ -19,6 +22,13 @@ public class Sample extends UUIDEntity {
     private int votes;
     private double rating;
     private int rank;
+
+    //Hibernate suggest that should use this inverse style mapping if it is Parent-Child relationship which the child's FK always has value.
+    //This field show bidirectional one-to-many relationship.
+    private Set<SampleComment> comments = new HashSet();
+
+    public Sample() {
+    }
 
     public Sample(String title, String year, int votes, double rating, int rank) {
         super();
@@ -67,5 +77,22 @@ public class Sample extends UUIDEntity {
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    //This field show bidirectional one-to-many relationship.
+    @OneToMany
+    public Set<SampleComment> getComments() {
+        return comments;
+    }
+
+    //This field show bidirectional one-to-many relationship.
+    public void setComments(Set<SampleComment> comments) {
+        this.comments = comments;
+    }
+
+    //This field show bidirectional one-to-many relationship.
+    public boolean addCommentToSample(SampleComment comment) {
+        comment.setCommentedSample(this);
+        return this.getComments().add(comment);
     }
 }

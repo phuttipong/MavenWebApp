@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM
+        "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration>
+
+    <!--
+        this is an xml config file for development environment
+        please specific "-Dlog4j.configuration=log4j-dev.xml" as VM options.
+    -->
+
+    <!-- Appender -->
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%-5p: %c - %m%n"/>
+        </layout>
+    </appender>
+
+    <!-- Log all SQL DML statements as they are executed -->
+    <logger name="org.hibernate.SQL">
+        <level value="DEBUG"/>
+    </logger>
+    <logger name="org.hibernate.tool.hbm2ddl">
+        <level value="DEBUG"/>
+    </logger>
+
+    <!-- Root Logger -->
+    <root>
+        <priority value="off"/>
+        <appender-ref ref="console"/>
+    </root>
+
+</log4j:configuration>

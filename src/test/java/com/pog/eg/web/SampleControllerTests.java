@@ -1,7 +1,7 @@
 package com.pog.eg.web;
 
 
-import com.pog.eg.config.TestContext;
+import com.pog.eg.config.ControllerTestContext;
 import com.pog.eg.domain.Sample;
 import com.pog.eg.service.SampleService;
 import org.joda.time.DateTime;
@@ -43,9 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {TestContext.class})
+@ContextConfiguration(classes = {ControllerTestContext.class})
 @ActiveProfiles("test")
-public class SampleControllerTests extends BaseControllerTests {
+public class SampleControllerTests extends ControllerTests {
 
     @Autowired
     SampleService sampleService;

@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
  */
 @Configuration
 @Profile("test")
-public class TestContext extends WebServletConfig {
+public class ControllerTestContext extends WebServletConfig {
 
     @Bean
     public SampleService sampleService() {

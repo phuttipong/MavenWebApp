@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
  * @version %I%
  * @since 3/6/2559
  */
-abstract class BaseControllerTests {
+abstract class ControllerTests {
 
     protected MockMvc mockMvc;
 
