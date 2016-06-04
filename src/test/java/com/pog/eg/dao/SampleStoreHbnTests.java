@@ -22,7 +22,6 @@ import static org.junit.Assert.assertEquals;
  * @since 3/6/2559
  */
 @ContextConfiguration(classes = {PersistenceTestContext.class})
-@ActiveProfiles("test")
 @Sql("classpath:dao/init-sample-store.sql")
 public class SampleStoreHbnTests extends StoreTests {
 
@@ -34,8 +33,8 @@ public class SampleStoreHbnTests extends StoreTests {
     }
 
     @Test
-    public void getAllThenReturnAllRecords() {
-        List list = sampleStore.getAll();
+    public void findAllThenReturnAllRecords() {
+        List list = sampleStore.findAll();
         assertEquals(1, list.size());
     }
 }

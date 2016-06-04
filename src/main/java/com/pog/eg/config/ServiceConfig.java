@@ -11,6 +11,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan({"com.pog.eg.service"})
-//@EnableTransactionManagement // if use @Transactional
 public class ServiceConfig {
 }

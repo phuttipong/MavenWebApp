@@ -1,18 +1,19 @@
 package com.pog.eg.config;
 
-import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jndi.JndiTemplate;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.naming.NamingException;
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -25,41 +26,69 @@ import java.util.Properties;
  * @since 2/6/2559
  */
 @Configuration
-@ComponentScan({"com.pog.eg.dao"})
+@EnableJpaRepositories(basePackages = {"com.pog.eg.dao"})
+@EnableTransactionManagement
+@PropertySource("classpath:META-INF/spring/persistenceConfig.properties")
 public class PersistenceConfig {
 
-    private static final Logger logger = LoggerFactory
-            .getLogger(PersistenceConfig.class);
-
     @Bean
-    public HibernateTransactionManager transactionManager(SessionFactory sessionFactory) throws IOException {
-        HibernateTransactionManager txName = new HibernateTransactionManager(sessionFactory);
-        return txName;
+    JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        return transactionManager;
     }
 
     @Bean
-    LocalSessionFactoryBean sessionFactory(DataSource dataSource) {
+    LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
+                                                                Environment env) {
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactoryBean.setDataSource(dataSource);
+        entityManagerFactoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManagerFactoryBean.setPackagesToScan("com.pog.eg.domain");
 
-        LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
-        sfb.setPackagesToScan("com.pog.eg.domain");
-        sfb.setDataSource(dataSource);
+        Properties jpaProperties = new Properties();
 
-        Properties props = new Properties();
-        props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        sfb.setHibernateProperties(props);
+        //Configures the used database dialect. This allows Hibernate to create SQL
+        //that is optimized for the used database.
+        jpaProperties.put("hibernate.dialect", env.getRequiredProperty("hibernate.dialect"));
 
-        return sfb;
+        //Specifies the action that is invoked to the database when the Hibernate
+        //SessionFactory is created or closed.
+        jpaProperties.put("hibernate.hbm2ddl.auto",
+                env.getRequiredProperty("hibernate.hbm2ddl.auto")
+        );
+
+        //Configures the naming strategy that is used when Hibernate creates
+        //new database objects and schema elements
+        jpaProperties.put("hibernate.ejb.naming_strategy",
+                env.getRequiredProperty("hibernate.ejb.naming_strategy")
+        );
+
+        //If the value of this property is true, Hibernate writes all SQL
+        //statements to the console.
+        jpaProperties.put("hibernate.show_sql",
+                env.getRequiredProperty("hibernate.show_sql")
+        );
+
+        //If the value of this property is true, Hibernate will format the SQL
+        //that is written to the console.
+        jpaProperties.put("hibernate.format_sql",
+                env.getRequiredProperty("hibernate.format_sql")
+        );
+
+        entityManagerFactoryBean.setJpaProperties(jpaProperties);
+
+        return entityManagerFactoryBean;
     }
 
-    @Bean
-    DataSource dataSource() {
-        DataSource dataSource = null;
-        JndiTemplate jndi = new JndiTemplate();
-        try {
-            dataSource = (DataSource) jndi.lookup("java:comp/env/jdbc/yourname");
-        } catch (NamingException e) {
-            logger.error("NamingException for java:comp/env/jdbc/yourname", e);
-        }
-        return dataSource;
+    @Bean(destroyMethod = "close")
+    DataSource dataSource(Environment env) {
+        HikariConfig dataSourceConfig = new HikariConfig();
+        dataSourceConfig.setDriverClassName(env.getRequiredProperty("db.driver"));
+        dataSourceConfig.setJdbcUrl(env.getRequiredProperty("db.url"));
+        dataSourceConfig.setUsername(env.getRequiredProperty("db.username"));
+        dataSourceConfig.setPassword(env.getRequiredProperty("db.password"));
+
+        return new HikariDataSource(dataSourceConfig);
     }
 }

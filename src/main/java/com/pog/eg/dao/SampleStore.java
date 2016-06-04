@@ -1,8 +1,10 @@
 package com.pog.eg.dao;
 
 import com.pog.eg.domain.Sample;
+import org.springframework.data.repository.Repository;
 
-import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -14,7 +16,17 @@ import java.util.UUID;
  * @version %I%
  * @since 2/6/2559
  */
-public interface SampleStore extends GenericStore<Sample, UUID> {
+public interface SampleStore extends Repository<Sample, UUID> {
 
-    Sample getByTitle(String title) throws EntityNotFoundException;
+    void delete(Sample deleted);
+
+    List<Sample> findAll();
+
+    Optional<Sample> findOne(UUID id);
+
+    void flush();
+
+    Sample save(Sample persisted);
+
+    Sample findByTitle(String title);
 }
