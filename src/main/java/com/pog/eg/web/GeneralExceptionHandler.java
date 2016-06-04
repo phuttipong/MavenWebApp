@@ -19,7 +19,7 @@ import java.io.IOException;
  * @since 21/4/2559
  */
 @ControllerAdvice
-public class ExceptionHandlerController {
+public class GeneralExceptionHandler {
 
     @Autowired
     private Util util;

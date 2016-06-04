@@ -14,7 +14,7 @@ import java.text.MessageFormat;
  */
 @Controller
 @RequestMapping("**/httpError")
-public class HTTPErrorHandlerController {
+public class HTTPErrorController {
 
     private final String viewFormat = "error/{0}.html"; //This should match ViewResolver configurations.
 
