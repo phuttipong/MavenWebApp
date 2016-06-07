@@ -35,7 +35,7 @@
 
     <servlet-mapping>
         <servlet-name>sample-web</servlet-name>
-        <url-pattern>/acc/*</url-pattern>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 
     <!--This set default @Profile("production")-->

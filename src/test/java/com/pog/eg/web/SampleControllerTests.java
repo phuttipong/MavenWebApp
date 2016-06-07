@@ -63,7 +63,7 @@ public class SampleControllerTests extends ControllerTests {
     @Test
     public void getTextThenReturnStaticString() throws Exception {
 
-        this.mockMvc.perform(get("/acc/sample/text").accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/api/sample/text").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().string("\"Simple Hello World!, return string in response body\""));
@@ -75,7 +75,7 @@ public class SampleControllerTests extends ControllerTests {
         List<String> e = Arrays.asList("Buenos Aires", "Córdoba");
         when(sampleService.buildSampleList()).thenReturn(e);
 
-        this.mockMvc.perform(ajax(get("/acc/sample/getList")))
+        this.mockMvc.perform(ajax(get("/api/sample/getList")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().json(json(e)));
@@ -86,7 +86,7 @@ public class SampleControllerTests extends ControllerTests {
         Sample e = new Sample("The Shawshank Redemption", "1994", 678790, 9.2, 1);
         when(sampleService.get("2")).thenReturn(e);
 
-        this.mockMvc.perform(ajax(get("/acc/sample/{id}", 2)))
+        this.mockMvc.perform(ajax(get("/api/sample/{id}", 2)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().json(json(e)));
@@ -97,7 +97,7 @@ public class SampleControllerTests extends ControllerTests {
         Sample e = new Sample("The Shawshank Redemption", "1994", 678790, 9.2, 1);
         when(sampleService.delete("5")).thenReturn(e);
 
-        this.mockMvc.perform(ajax(delete("/acc/sample/{id}", 5)))
+        this.mockMvc.perform(ajax(delete("/api/sample/{id}", 5)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().json(json(e)));
@@ -110,7 +110,7 @@ public class SampleControllerTests extends ControllerTests {
 
         when(webUtil.getLocalNow()).thenReturn(atTime);
 
-        this.mockMvc.perform(ajax(get("/acc/sample/localDateTime")))
+        this.mockMvc.perform(ajax(get("/api/sample/localDateTime")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().json(json(atTime)));
@@ -123,7 +123,7 @@ public class SampleControllerTests extends ControllerTests {
 
         when(webUtil.getUtcNow()).thenReturn(atTime);
 
-        this.mockMvc.perform(ajax(get("/acc/sample/utcDateTime")))
+        this.mockMvc.perform(ajax(get("/api/sample/utcDateTime")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().json(json(atTime)));
@@ -132,7 +132,7 @@ public class SampleControllerTests extends ControllerTests {
     @Test
     public void getTimeZoneThenReturnCurrentTimezone() throws Exception {
 
-        this.mockMvc.perform(ajax(get("/acc/sample/timezone")))
+        this.mockMvc.perform(ajax(get("/api/sample/timezone")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().string("\"Asia/Bangkok\""));
@@ -141,7 +141,7 @@ public class SampleControllerTests extends ControllerTests {
     @Test
     public void getMyLocaleThenReturnEnglishLocale() throws Exception {
 
-        this.mockMvc.perform(ajax(get("/acc/sample/myLocale")))
+        this.mockMvc.perform(ajax(get("/api/sample/myLocale")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().string("\"English, Indochina Time\""));
@@ -150,7 +150,7 @@ public class SampleControllerTests extends ControllerTests {
     @Test
     public void getMyLocaleWithZhThenReturnChinese() throws Exception {
         //set HttpHeaders.ACCEPT_LANGUAGE is not work, Spring Test Framework use specific method for this job.
-        this.mockMvc.perform(ajax(get("/acc/sample/myLocale")).locale(Locale.CHINESE))
+        this.mockMvc.perform(ajax(get("/api/sample/myLocale")).locale(Locale.CHINESE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().string("\"Chinese, Indochina Time\""));
@@ -158,7 +158,7 @@ public class SampleControllerTests extends ControllerTests {
 
     @Test
     public void getLocaleMessageThenReturnEnglish() throws Exception {
-        this.mockMvc.perform(ajax(get("/acc/sample/localeMessage")))
+        this.mockMvc.perform(ajax(get("/api/sample/localeMessage")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().string("\"Hello\""));
@@ -166,7 +166,7 @@ public class SampleControllerTests extends ControllerTests {
 
     @Test
     public void getLocaleMessageWithZhThenReturnChinese() throws Exception {
-        this.mockMvc.perform(ajax(get("/acc/sample/localeMessage")).locale(Locale.CHINESE))
+        this.mockMvc.perform(ajax(get("/api/sample/localeMessage")).locale(Locale.CHINESE))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().string("\"你好\""));
@@ -174,7 +174,7 @@ public class SampleControllerTests extends ControllerTests {
 
     @Test
     public void getSecretDataThenReturnText() throws Exception {
-        this.mockMvc.perform(ajax(get("/acc/sample/sc/secretData")))
+        this.mockMvc.perform(ajax(get("/api/sample/sc/secretData")))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(contentType))
                 .andExpect(content().string("\"I'm alien.\""));
@@ -182,7 +182,7 @@ public class SampleControllerTests extends ControllerTests {
 
     @Test
     public void getErrorThen404() throws Exception {
-        this.mockMvc.perform(ajax(get("/acc/sample/error")))
+        this.mockMvc.perform(ajax(get("/api/sample/error")))
                 .andExpect(status().isInternalServerError());
     }
 
