@@ -19,21 +19,33 @@ cd HelloWebpack
 npm install
 ```
 
-**Compile modules into single file**
-```
-npm run pack
-```
+### Build/Compile
+run 'gulp build' to combine with minify
+run 'gulp build-dev' to combine without minify
+run 'gulp refresh' to refresh code in deploy folder
 
-Open deploy/index.html in your browser.
 
-Static files are served from the `public` folder, project JavaScript files are bundled from the `src` folder.
-
+then open deploy/index.html in your browser.
 
 ### Dependencies
-
 * React & React-DOM & React-Router
-* Webpack
+* Webpack, Gulp
 * Babel Core
 * Babel Loader (With "es2015" and "react" presets)
 * Css Loader (With "es2015" and "react" presets)
 * underscore as utility
+
+
+
+### How to test ui together with server
+**Create Gulp tool
+got to File/Settings/Tools/External Tools to create tool that run 'gulp refresh'
+For example
+    Tool setting
+        Program: C:\Users\phuttipong\AppData\Roaming\npm\gulp.cmd
+        Parameter: refresh
+        Working Directory: $ProjectFileDir$\Ui
+
+
+**Create Run/Debug configuration (IntelliJ IDEA)**
+create as usual and add the tool to Run/Debug steps so that it deploy ui files to deploy folder.
