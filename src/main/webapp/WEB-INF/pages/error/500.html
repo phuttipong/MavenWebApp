@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title th:text="#{page.serverError.title}"></title>
+    <title th:text="#{page.serverError.title}">Server Error</title>
     <style type="text/css" media="screen">
         body {
             background-color: #f1f1f1;
@@ -83,9 +83,10 @@
 </div>
 
 <div class="container">
-    <p><strong th:text="#{page.serverError.header}"></strong></p>
+    <p><strong th:text="#{page.serverError.header}">Looks like something went wrong!</strong></p>
 
-    <p th:text="#{page.serverError.error}"></p>
+    <p th:text="#{page.serverError.error}">We track these errors automatically, but if the problem persists feel free to
+        contact us. In the meantime, try refreshing.</p>
 
     <!--<div id="suggestions">-->
     <!--<a href="#" th:text="#{contactSupport}"></a> —-->
