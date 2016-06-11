@@ -4,7 +4,6 @@ import com.pog.eg.config.PersistenceTestContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -35,6 +34,6 @@ public class SampleStoreHbnTests extends StoreTests {
     @Test
     public void findAllThenReturnAllRecords() {
         List list = sampleStore.findAll();
-        assertEquals(1, list.size());
+        assertEquals(3, list.size());
     }
 }
