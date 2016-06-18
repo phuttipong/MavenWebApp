@@ -113,3 +113,31 @@
 .status_good {
     color: #ddd;
 }
+
+/*top tool theme*/
+.app-toolbar {
+    background: #545454;
+}
+
+.app-logo {
+    background: #545454;
+}
+
+.app-toolbar .webix_icon_button .webix_icon {
+    color: #fff;
+}
+
+.app-lang {
+    border: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.app-lang img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
