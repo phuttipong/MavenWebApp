@@ -16,10 +16,14 @@ import java.io.IOException;
  * A filter used to hook stateless protection logic.
  * this also provide API to get user profile.
  *
+ * user profile JSON such as following
+ * {timestamp: 1506405154, fullname: "Phuttipong Aimsupanimitr", permissions: ["viewBankAccounts",...]}
+ *
  * @author phuttipong
  * @version %I%
  * @since 7/4/2559
  */
+@SuppressWarnings("unused")
 class StatelessAuthenticationFilter extends GenericFilterBean {
 
     private final StatelessAuthenticationService statelessAuthenticationService;
