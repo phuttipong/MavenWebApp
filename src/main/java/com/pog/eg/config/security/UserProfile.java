@@ -4,17 +4,18 @@ import javax.persistence.Entity;
 import java.util.Collection;
 
 /**
- * This is DTO class hold data for authentication.
+ * This is DTO class hold user profile datas.
  *
  * @author phuttipong
  * @version %I%
  * @since 6/4/2559
  */
+@SuppressWarnings("unused")
 @Entity
 class UserProfile {
-    private long timestamp;
-    private String fullname;
-    private Collection<MultiRolesUserDetailsService.permission> permissions;
+    private final long timestamp;
+    private final String fullname;
+    private final Collection<MultiRolesUserDetailsService.permission> permissions;
 
     UserProfile(long timestamp, String fullname, Collection<MultiRolesUserDetailsService.permission> permissions) {
         this.timestamp = timestamp;
